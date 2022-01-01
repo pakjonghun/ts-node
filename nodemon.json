@@ -1,5 +1,5 @@
 {
-  "ignore": ["node_modules", ".ignore", ".git"],
+  "ignore": ["node_modules/", ".git", "dist/", "coverage/"],
   "ext": "js,json,ts",
   "watch": ["src/**/*"]
 }
