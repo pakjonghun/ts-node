@@ -1,3 +1,4 @@
+import { permissions } from "./controller/permission.controller";
 import {
   allUser,
   CreateUser,
@@ -15,6 +16,7 @@ import {
   updatePassword,
   user,
 } from "./controller/auth.controller";
+import { createRole, roles } from "./controller/role.controller";
 
 const routes = (router: Router) => {
   router.post("/api/register", register);
@@ -24,10 +26,13 @@ const routes = (router: Router) => {
   router.put("/api/users/info", tokenMiddleWare, updateInfo);
   router.put("/api/users/password", tokenMiddleWare, updatePassword);
   router.get("/api/users", tokenMiddleWare, allUser);
-  router.post("/api/users/create", tokenMiddleWare, CreateUser);
+  router.post("/api/users", CreateUser);
   router.get("/api/users/:id", tokenMiddleWare, GetUser);
   router.put("/api/users/:id", tokenMiddleWare, UpdateUser);
   router.delete("/api/users/:id", tokenMiddleWare, DeleteUser);
+  router.get("/api/permissions", tokenMiddleWare, permissions);
+  router.get("/api/roles", tokenMiddleWare, roles);
+  router.post("/api/roles", tokenMiddleWare, createRole);
 };
 
 export default routes;

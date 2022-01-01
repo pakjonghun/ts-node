@@ -9,7 +9,6 @@ import { updatePasswordValidation } from "../validation/updatePassword.validatio
 
 export const register = async (req: Request, res: Response) => {
   const body = req.body;
-  console.log(body);
   const { error } = registerValidation.validate(body);
 
   if (error) {
@@ -25,12 +24,10 @@ export const register = async (req: Request, res: Response) => {
   const hashedPassword = await bcrtpy.hash(body.password, 10);
 
   const repository = getManager().getRepository(User);
-
   const { password, ...rest } = await repository.save({
-    firstName: body.firstName,
-    lastName: body.lastName,
+    ...body,
+    roleId: 1,
     password: hashedPassword,
-    email: body.email,
   });
 
   res.send(rest);
