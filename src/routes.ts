@@ -1,3 +1,5 @@
+import express from "express";
+
 import { upload } from "./controller/image.controller";
 import {
   createProduct,

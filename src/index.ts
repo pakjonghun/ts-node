@@ -11,6 +11,7 @@ createConnection().then((connection) => {
   app.use(morgan("tiny"));
   app.use(express.json());
   app.use(cookieParser());
+  app.use("/api/uploads", express.static("uploads"));
   app.use(
     cors({
       credentials: true,
