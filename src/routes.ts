@@ -1,6 +1,10 @@
-import express from "express";
-
-import { upload } from "./controller/image.controller";
+import {
+  createOrder,
+  deleteOrder,
+  getAllOrders,
+  getOrder,
+  updateOrder,
+} from "./controller/order.controller";
 import {
   createProduct,
   deleteProduct,
@@ -33,8 +37,7 @@ import {
   roles,
   updateRole,
 } from "./controller/role.controller";
-import multer from "multer";
-import { extname } from "path";
+import { upload } from "./controller/image.controller";
 
 const routes = (router: Router) => {
   router.post("/api/register", register);
@@ -63,7 +66,13 @@ const routes = (router: Router) => {
   router.put("/api/products/:id", tokenMiddleWare, updateProduct);
   router.delete("/api/products/:id", tokenMiddleWare, deleteProduct);
 
-  router.post("/api/upload", upload);
+  router.post("/api/uploads", upload);
+
+  router.get("/api/orders", getAllOrders);
+  router.get("/api/orders/:id", tokenMiddleWare, getOrder);
+  router.post("/api/orders", tokenMiddleWare, createOrder);
+  router.put("/api/orders/:id", updateOrder);
+  router.delete("/api/orders/:id", deleteOrder);
 };
 
 export default routes;
