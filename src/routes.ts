@@ -1,6 +1,7 @@
 import {
   createOrder,
   deleteOrder,
+  Export,
   getAllOrders,
   getOrder,
   updateOrder,
@@ -73,6 +74,8 @@ const routes = (router: Router) => {
   router.post("/api/orders", tokenMiddleWare, createOrder);
   router.put("/api/orders/:id", updateOrder);
   router.delete("/api/orders/:id", deleteOrder);
+
+  router.post("/api/export", Export);
 };
 
 export default routes;

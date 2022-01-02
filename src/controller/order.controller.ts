@@ -2,6 +2,7 @@ import { ProductOrder } from "./../entity/order.entity";
 import { OrderItem } from "./../entity/order.item.entity";
 import { Request, Response } from "express";
 import { getConnection, getManager } from "typeorm";
+import { Parser } from "json2csv";
 export const getAllOrders = async (req: Request, res: Response) => {
   const user = res.locals.user;
   const take = 15;
@@ -43,7 +44,6 @@ export const getAllOrders = async (req: Request, res: Response) => {
     items: item.orderItems,
   }));
 
-  console.log(c);
   res.json({
     data: k,
     meta: { page, total: c, lastPage: Math.ceil(c / take) },
@@ -93,4 +93,43 @@ export const deleteOrder = async (req: Request, res: Response) => {
   await orderRepo.delete(req.params.id);
 
   res.sendStatus(204);
+};
+
+export const Export = async (req: Request, res: Response) => {
+  const parser = new Parser();
+  fields: ["ID", "Name", "Email", "Product Title", "Price", "Quantity"];
+
+  const orderRepo = getManager().getRepository(ProductOrder);
+
+  const orders = await orderRepo.find({ relations: ["orderItems"] });
+
+  const temp = [];
+
+  orders.forEach((item) => {
+    temp.push({
+      ID: item.id,
+      Name: item.getname,
+      Email: item.email,
+      "Product Title": "",
+      Price: "",
+      Quantity: "",
+    });
+
+    item.orderItems.forEach((jtem) => {
+      temp.push({
+        ID: "",
+        Name: "",
+        Email: "",
+        "Product Title": jtem.title,
+        Price: jtem.price,
+        Quantity: jtem.quantity,
+      });
+    });
+  });
+
+  const csv = parser.parse(temp);
+
+  res.header("Content-Type", "text/csv");
+  res.attachment("orders.csv");
+  res.send(csv);
 };
