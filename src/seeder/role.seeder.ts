@@ -82,4 +82,6 @@ createConnection().then(async (connection) => {
       }))
     )
     .execute();
+
+  process.exit(0);
 });

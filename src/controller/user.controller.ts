@@ -7,13 +7,26 @@ import { Request } from "express";
 import { getConnection, getManager, getRepository } from "typeorm";
 
 export const allUser = async (req: Request, res: Response) => {
-  const users = await getRepository(User)
-    .createQueryBuilder("user")
+  const page = parseInt((req.query.page as string) || "1");
+  const take = 2;
+  const temp = await getConnection()
+    .createQueryBuilder()
     .select(["user.email", "user.firstname", "user.lastname", "role.name"])
-    .leftJoin(Role, "role", "user.role_id = role.id")
-    .where("role.id not in (1)")
+    .from(User, "user")
+    .leftJoin(Role, "role", "user.roleId = role.id")
+    .where("role.id not in (1)");
+
+  const total = await temp.getCount();
+
+  const users = await temp
+    .take(take)
+    .skip((page - 1) * take)
     .execute();
-  res.json(users);
+
+  res.json({
+    data: users,
+    meta: { page, total, lastPage: Math.ceil(total / take) },
+  });
 };
 
 export const CreateUser = async (req: Request, res: Response) => {
@@ -75,7 +88,7 @@ export const UpdateUser = async (req: Request, res: Response) => {
 };
 
 export const DeleteUser = async (req: Request, res: Response) => {
-  const a = await getConnection()
+  await getConnection()
     .createQueryBuilder()
     .delete()
     .from(User)

@@ -8,9 +8,11 @@ export class RolePermission {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Role, (role) => role.permission)
+  @ManyToOne(() => Role, (role) => role.permission, { onDelete: "CASCADE" })
   role: Role;
 
-  @ManyToOne(() => Permission, (permission) => permission.role)
+  @ManyToOne(() => Permission, (permission) => permission.role, {
+    onDelete: "CASCADE",
+  })
   permission: Permission;
 }
