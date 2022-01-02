@@ -1,3 +1,5 @@
+import { Response } from "express";
+import { Request } from "express";
 import { ProductOrder } from "./../entity/order.entity";
 import faker from "faker";
 import { OrderItem } from "./../entity/order.item.entity";
@@ -14,6 +16,7 @@ createConnection().then(async (connection) => {
       firstname: faker.name.firstName(),
       lastname: faker.name.lastName(),
       email: faker.internet.email(),
+      createdAt: faker.date.past(2).toDateString(),
     });
 
     for (let i = 0; i < 5; i++) {

@@ -3,6 +3,7 @@ import { OrderItem } from "./../entity/order.item.entity";
 import { Request, Response } from "express";
 import { getConnection, getManager } from "typeorm";
 import { Parser } from "json2csv";
+
 export const getAllOrders = async (req: Request, res: Response) => {
   const user = res.locals.user;
   const take = 15;
@@ -96,40 +97,56 @@ export const deleteOrder = async (req: Request, res: Response) => {
 };
 
 export const Export = async (req: Request, res: Response) => {
-  const parser = new Parser();
-  fields: ["ID", "Name", "Email", "Product Title", "Price", "Quantity"];
+  const parser = new Parser({
+    fields: ["ID", "Name", "Email", "CreatedAt", "Title", "Price", "Quantity"],
+  });
 
-  const orderRepo = getManager().getRepository(ProductOrder);
+  const repo = getManager().getRepository(ProductOrder);
 
-  const orders = await orderRepo.find({ relations: ["orderItems"] });
+  const orders = await repo.find({ relations: ["orderItems"] });
 
-  const temp = [];
-
-  orders.forEach((item) => {
-    temp.push({
-      ID: item.id,
-      Name: item.getname,
-      Email: item.email,
-      "Product Title": "",
+  const tempArr = [];
+  orders.forEach((order) => {
+    tempArr.push({
+      ID: order.id,
+      Name: order.getname,
+      Email: order.email,
+      CreatedAt: order.createdAt,
+      Title: "",
       Price: "",
       Quantity: "",
     });
 
-    item.orderItems.forEach((jtem) => {
-      temp.push({
+    order.orderItems.forEach((item) => {
+      tempArr.push({
         ID: "",
         Name: "",
         Email: "",
-        "Product Title": jtem.title,
-        Price: jtem.price,
-        Quantity: jtem.quantity,
+        CreatedAt: "",
+        Title: item.title,
+        Price: item.price,
+        Quantity: item.quantity,
       });
     });
   });
-
-  const csv = parser.parse(temp);
+  const csv = parser.parse(tempArr);
 
   res.header("Content-Type", "text/csv");
   res.attachment("orders.csv");
   res.send(csv);
+};
+
+export const getChart = async (req: Request, res: Response) => {
+  const manager = getManager();
+  const result = await manager.query(
+    `
+    SELECT DATE_FORMAT(po.createdAt, '%Y-%m-%d') date,
+           SUM(oi.price * oi.quantity) sum
+    FROM product_order po
+    JOIN order_item oi
+    ON po.id = oi.order_id
+    GROUP BY date;
+    `
+  );
+  res.json(result);
 };

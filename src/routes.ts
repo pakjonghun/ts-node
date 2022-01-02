@@ -3,6 +3,7 @@ import {
   deleteOrder,
   Export,
   getAllOrders,
+  getChart,
   getOrder,
   updateOrder,
 } from "./controller/order.controller";
@@ -76,6 +77,7 @@ const routes = (router: Router) => {
   router.delete("/api/orders/:id", deleteOrder);
 
   router.post("/api/export", Export);
+  router.get("/api/chart", getChart);
 };
 
 export default routes;
