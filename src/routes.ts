@@ -1,3 +1,4 @@
+import { upload } from "./controller/image.controller";
 import {
   createProduct,
   deleteProduct,
@@ -30,6 +31,8 @@ import {
   roles,
   updateRole,
 } from "./controller/role.controller";
+import multer from "multer";
+import { extname } from "path";
 
 const routes = (router: Router) => {
   router.post("/api/register", register);
@@ -57,6 +60,8 @@ const routes = (router: Router) => {
   router.get("/api/products/:id", getProduct);
   router.put("/api/products/:id", tokenMiddleWare, updateProduct);
   router.delete("/api/products/:id", tokenMiddleWare, deleteProduct);
+
+  router.post("/api/upload", upload);
 };
 
 export default routes;
