@@ -26,7 +26,7 @@ export const register = async (req: Request, res: Response) => {
   const repository = getManager().getRepository(User);
   const { password, ...rest } = await repository.save({
     ...body,
-    roleId: 1,
+    wId: 1,
     password: hashedPassword,
   });
 

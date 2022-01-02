@@ -1,10 +1,8 @@
-import { permissions } from "./../controller/permission.controller";
 import { RolePermission } from "./../entity/rolePermissionEntity";
 import { Role } from "./../entity/role.entity";
 import { Permission } from "./../entity/permission.entity";
 import { getConnection, getManager } from "typeorm";
 import { createConnection } from "typeorm";
-import { User } from "../entity/user.entity";
 
 createConnection().then(async (connection) => {
   const permissionRepository = getManager().getRepository(Permission);

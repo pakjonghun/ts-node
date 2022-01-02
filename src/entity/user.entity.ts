@@ -20,6 +20,5 @@ export class User {
   email: string;
 
   @ManyToOne(() => Role, (role) => role.user)
-  @JoinColumn({ name: "role_id" })
   roleId: Role;
 }

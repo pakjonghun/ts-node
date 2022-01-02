@@ -16,7 +16,12 @@ import {
   updatePassword,
   user,
 } from "./controller/auth.controller";
-import { createRole, roles } from "./controller/role.controller";
+import {
+  createRole,
+  getRole,
+  roles,
+  updateRole,
+} from "./controller/role.controller";
 
 const routes = (router: Router) => {
   router.post("/api/register", register);
@@ -33,6 +38,8 @@ const routes = (router: Router) => {
   router.get("/api/permissions", tokenMiddleWare, permissions);
   router.get("/api/roles", tokenMiddleWare, roles);
   router.post("/api/roles", tokenMiddleWare, createRole);
+  router.get("/api/roles/:id", tokenMiddleWare, getRole);
+  router.put("/api/roles/:id", updateRole);
 };
 
 export default routes;

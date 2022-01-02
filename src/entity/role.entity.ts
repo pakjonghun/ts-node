@@ -23,5 +23,6 @@ export class Role {
   user: User[];
 
   @OneToMany(() => RolePermission, (rp) => rp.role)
+  @JoinColumn({ name: "permission_id", referencedColumnName: "id" })
   permission: RolePermission[];
 }
