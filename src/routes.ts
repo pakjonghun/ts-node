@@ -1,3 +1,4 @@
+import { permissionMiddleware } from "./middleware/permission.middleware";
 import {
   createOrder,
   deleteOrder,
@@ -47,13 +48,38 @@ const routes = (router: Router) => {
   router.get("/api/user", tokenMiddleWare, user);
   router.get("/api/logout", tokenMiddleWare, logout);
 
-  router.put("/api/users/info", tokenMiddleWare, updateInfo);
-  router.put("/api/users/password", tokenMiddleWare, updatePassword);
-  router.get("/api/users", allUser);
+  router.put(
+    "/api/users/info",
+    tokenMiddleWare,
+    permissionMiddleware("User"),
+    updateInfo
+  );
+  router.put(
+    "/api/users/password",
+    tokenMiddleWare,
+    permissionMiddleware("User"),
+    updatePassword
+  );
+  router.get("/api/users", permissionMiddleware("User"), allUser);
   router.post("/api/users", CreateUser);
-  router.get("/api/users/:id", tokenMiddleWare, GetUser);
-  router.put("/api/users/:id", tokenMiddleWare, UpdateUser);
-  router.delete("/api/users/:id", tokenMiddleWare, DeleteUser);
+  router.get(
+    "/api/users/:id",
+    tokenMiddleWare,
+    permissionMiddleware("User"),
+    GetUser
+  );
+  router.put(
+    "/api/users/:id",
+    tokenMiddleWare,
+    permissionMiddleware("User"),
+    UpdateUser
+  );
+  router.delete(
+    "/api/users/:id",
+    tokenMiddleWare,
+    permissionMiddleware("User"),
+    DeleteUser
+  );
 
   router.get("/api/permissions", tokenMiddleWare, permissions);
   router.get("/api/roles", tokenMiddleWare, roles);
@@ -62,11 +88,26 @@ const routes = (router: Router) => {
   router.put("/api/roles/:id", tokenMiddleWare, updateRole);
   router.delete("/api/roles/:id", tokenMiddleWare, deleteRole);
 
-  router.post("/api/products", tokenMiddleWare, createProduct);
-  router.get("/api/products", getAllProducts);
-  router.get("/api/products/:id", getProduct);
-  router.put("/api/products/:id", tokenMiddleWare, updateProduct);
-  router.delete("/api/products/:id", tokenMiddleWare, deleteProduct);
+  router.post(
+    "/api/products",
+    tokenMiddleWare,
+    permissionMiddleware("products"),
+    createProduct
+  );
+  router.get("/api/products", permissionMiddleware("Products"), getAllProducts);
+  router.get("/api/products/:id", permissionMiddleware("Products"), getProduct);
+  router.put(
+    "/api/products/:id",
+    tokenMiddleWare,
+    permissionMiddleware("Products"),
+    updateProduct
+  );
+  router.delete(
+    "/api/products/:id",
+    tokenMiddleWare,
+    permissionMiddleware("Products"),
+    deleteProduct
+  );
 
   router.post("/api/uploads", upload);
 

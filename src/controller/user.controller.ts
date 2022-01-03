@@ -37,11 +37,11 @@ export const CreateUser = async (req: Request, res: Response) => {
   if (error) {
     return res.status(400).json(error.details);
   }
-
   const hashedPassword = await bcrtpy.hash("1234", 10);
   const repository = getManager().getRepository(User);
   const { password, ...rest } = await repository.save({
     ...body,
+    roleId: 1,
     password: hashedPassword,
   });
 
@@ -53,7 +53,7 @@ export const GetUser = async (req: Request, res: Response) => {
     .createQueryBuilder()
     .select(["user.firstname", "user.lastname", "user.email", "role.name"])
     .from(User, "user")
-    .leftJoin(Role, "role", "role.id = user.role")
+    .leftJoin(Role, "role", "role.id = user.roleId")
     .where("user.id = :id", { id: req.params.id })
     .execute();
 

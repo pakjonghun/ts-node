@@ -20,13 +20,12 @@ export const tokenMiddleWare = async (
     if (typeof payload !== "object" || !payload.id) {
       return res.status(401).json({ message: "unauthorized" });
     }
+    const userRepo = getManager().getRepository(User);
+    const user = await userRepo.findOne(payload.id, {
+      relations: ["roleId", "roleId.permission"],
+    });
 
-    const user = await getConnection()
-      .createQueryBuilder()
-      .select("user")
-      .from(User, "user")
-      .getOne();
-
+    console.log("token", user);
     if (!user) {
       return res.status(404).json({ message: "no user" });
     }

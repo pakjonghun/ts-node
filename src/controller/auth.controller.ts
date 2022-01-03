@@ -11,22 +11,24 @@ export const register = async (req: Request, res: Response) => {
   const body = req.body;
   const { error } = registerValidation.validate(body);
 
-  if (error) {
-    res.status(400).json(error);
-    return;
-  }
+  // if (error) {
+  //   res.status(400).json(error);
+  //   return;
+  // }
 
-  if (body.password !== body.passwordConfirm) {
-    res.status(400).json({ message: "password not match" });
-    return;
-  }
+  // if (body.password !== body.passwordConfirm) {
+  //   res.status(400).json({ message: "password not match" });
+  //   return;
+  // }
 
   const hashedPassword = await bcrtpy.hash(body.password, 10);
 
   const repository = getManager().getRepository(User);
   const { password, ...rest } = await repository.save({
     ...body,
-    wId: 1,
+    roleId: {
+      id: 1,
+    },
     password: hashedPassword,
   });
 
